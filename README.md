@@ -1,4 +1,4 @@
-# Kafka Streams API for Developers
+# Kafka Streams
 
 
 ## Set up Kafka Environment using Docker
@@ -17,13 +17,7 @@ docker-compose up
 docker ps
 ```
 
-- You should be below containers up and running in local
-
-```
-CONTAINER ID   IMAGE                                   COMMAND                  CREATED          STATUS          PORTS                                            NAMES
-fb28f7f91b0e   confluentinc/cp-server:7.1.0            "/etc/confluent/dock…"   50 seconds ago   Up 49 seconds   0.0.0.0:9092->9092/tcp, 0.0.0.0:9101->9101/tcp   broker
-d00a0f845a45   confluentinc/cp-zookeeper:7.1.0         "/etc/confluent/dock…"   50 seconds ago   Up 49 seconds   2888/tcp, 0.0.0.0:2181->2181/tcp, 3888/tcp       zookeeper
-```
+- You should see zookeeper and kafka containers up and running
 
 ### Interacting with Kafka
 
@@ -106,30 +100,4 @@ docker exec -it broker bash
 
 ```
 kafka-topics --bootstrap-server localhost:9092 --list
-```
-
-
-## KafkaStreams using SpringBoot
-
-### How AutoConfiguration works ?
-
-- Adding the annotation @EnableKafkaStreams is going to invoke the **KafkaStreamsDefaultConfiguration** class
-  - **KafkaStreamsAnnotationDrivenConfiguration** supplies the **KafkaStreamsConfiguration** bean
-  - This class takes care of building the **StreamsBuilderFactoryBean** which is responsible for supplying the StreamsBuilder instance.
-      - This **StreamsBuilderFactoryBean** class also takes care of managing the Lifecycle of the **KafkaStreams** App.
-
-
-## Interactive Queries with Multiple Instances of Kafka Streams using SpringBoot
-
-### Start up two instances of the application
-
-- **Instance 1** with the default port **8080**.
-
-```
-java -jar orders-streams-app/build/libs/orders-streams-app-0.0.1-SNAPSHOT.jar
-```
-- **Instance 2** with the port as **8081**.
-
-```
-java -jar -Dserver.port=8081 orders-streams-app/build/libs/orders-streams-app-0.0.1-SNAPSHOT.jar
 ```

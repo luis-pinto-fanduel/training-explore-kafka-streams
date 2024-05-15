@@ -23,21 +23,6 @@ public class WindowsStreamPlaygroundApp {
 
     public static void main(String[] args) {
 
-      var joinTopology = ExploreWindowTopology.build();
-
-        Properties config = new Properties();
-        config.put(StreamsConfig.APPLICATION_ID_CONFIG, "windows-2"); // consumer group
-        config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        config.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
-        config.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, "10000");
-
-        createTopics(config, List.of(WINDOW_WORDS ));
-         var kafkaStreams = new KafkaStreams(joinTopology, config);
-
-       Runtime.getRuntime().addShutdownHook(new Thread(kafkaStreams::close));
-
-        log.info("Starting Windowed streams");
-        kafkaStreams.start();
     }
 
     private static void createTopics(Properties config, List<String> greetings) {
