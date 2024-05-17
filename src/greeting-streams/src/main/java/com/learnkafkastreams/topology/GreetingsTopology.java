@@ -1,5 +1,7 @@
 package com.learnkafkastreams.topology;
 
+import com.learnkafkastreams.domain.Greeting;
+import com.learnkafkastreams.serdes.SerdesFactory;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -16,13 +18,14 @@ public class GreetingsTopology {
 
         StreamsBuilder streamsBuilder = new StreamsBuilder();
 
-        var greetingsStream = streamsBuilder.stream(GREETINGS, Consumed.with(Serdes.String(), Serdes.String()));
+        var greetingsStream = streamsBuilder.stream(GREETINGS,
+                Consumed.with(Serdes.String(), SerdesFactory.greetingSerdes()));
 
         var modifiedStream = greetingsStream
-                .filter(((key, value) -> value.length() > 5))
-                .mapValues(((readOnlyKey, value) -> value.toUpperCase()));
+                //.filter(((key, value) -> value.length() > 5))
+                .mapValues(((readOnlyKey, value) -> new Greeting(value.getMessage().toUpperCase(), value.getTimeStamp())));
 
-        modifiedStream.to(GREETINGS_UPPERCASE, Produced.with(Serdes.String(), Serdes.String()));
+        modifiedStream.to(GREETINGS_UPPERCASE, Produced.with(Serdes.String(), SerdesFactory.greetingSerdes()));
 
         return streamsBuilder.build();
     }
